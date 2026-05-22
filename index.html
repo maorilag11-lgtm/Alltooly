@@ -344,8 +344,8 @@ function step1Next(){
 
 // ─── OAUTH GOOGLE ─────────────────────────────────────────────────────────────
 function startGoogleOAuth(){
-  // Remplace TON_CLIENT_ID_ICI par ton vrai Client ID Google une seule fois
-  const clientId = 'TON_CLIENT_ID_ICI';
+  // Remplace 25389059200-fub3hhqnuegjbej2075qlsep50ntha1g.apps.googleusercontent.com par ton vrai Client ID Google une seule fois
+  const clientId = '25389059200-fub3hhqnuegjbej2075qlsep50ntha1g.apps.googleusercontent.com';
   sessionStorage.setItem('google_client_id', clientId);
   const redirectUri = location.origin + location.pathname;
   const params = new URLSearchParams({
