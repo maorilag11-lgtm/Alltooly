@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alltooly — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#080810;--bg2:#0e0e1a;--bg3:#13131f;--bg4:#18182a;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --purple:#7c3aed;--purple2:#6d28d9;--purple-light:#a78bfa;--purple-dim:rgba(124,58,237,0.12);
+  --text:#f0f0f8;--text2:#a0a0b8;--muted:#55556a;
+  --green:#4ade80;--green-dim:rgba(74,222,128,0.1);
+  --red:#f87171;--amber:#fbbf24;--blue:#60a5fa;--pink:#f472b6;
+  --sidebar:200px;
+}
+
+/* ── LIGHT MODE ── */
+body.light{
+  --bg:#f0f2f8;--bg2:#ffffff;--bg3:#f5f6fa;--bg4:#eaecf4;
+  --border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.12);
+  --purple:#7c3aed;--purple2:#6d28d9;--purple-light:#7c3aed;--purple-dim:rgba(124,58,237,0.08);
+  --text:#0f0f1a;--text2:#4a4a6a;--muted:#9090aa;
+  --green:#16a34a;--red:#dc2626;--amber:#d97706;--blue:#2563eb;--pink:#db2777;
+}
+body.light .s-logo-brand{color:#0f0f1a;}
+body.light .s-logo-brand span{color:var(--purple);}
+body.light .s-item:hover{background:rgba(0,0,0,0.04);}
+body.light .kpi{box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+body.light .panel{box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+body.light .topbar{box-shadow:0 1px 0 rgba(0,0,0,0.06);}
+body.light .searchbar{background:#eaecf4;}
+body.light .tb-btn{background:#eaecf4;border-color:rgba(0,0,0,0.08);}
+body.light .ppill.active{background:#eaecf4;color:var(--text);}
+body.light .loading{background:#f0f2f8;}
+body.light .demo-banner{background:rgba(217,119,6,0.08);border-color:rgba(217,119,6,0.15);}
+/* Toutes les polices blanches passent en sombre */
+body.light h1,body.light h2,body.light h3,body.light h4,
+body.light .kpi-val,body.light .rev-big,body.light .panel-title,
+body.light .tb-left h1,body.light .plat-name,body.light .deal-name,
+body.light .deal-amt,body.light .src-amt,body.light .gender-big,
+body.light .act-label,body.light .content-title,body.light .s-user-info .name,
+body.light .s-logo-brand{color:#0f0f1a !important;}
+body.light .kpi-badge.up{color:#16a34a;}
+body.light .kpi-badge.dn{color:#dc2626;}
+body.light .rev-sub{color:#16a34a;}
+body.light .plat-pct{color:#16a34a;}
+
+/* Transition douce sur tout */
+html{transition:background .3s;}
+body,body *{transition:background-color .25s, border-color .25s, color .2s, box-shadow .25s;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow:hidden;}
+
+/* ── LAYOUT ── */
+.app{display:flex;height:100vh;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar);min-width:var(--sidebar);background:var(--bg2);border-right:.5px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;}
+.sidebar::-webkit-scrollbar{width:0;}
+
+.s-logo{padding:18px 16px 14px;border-bottom:.5px solid var(--border);}
+.s-logo-top{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
+.s-logo-brand{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#fff;}
+.s-logo-brand span{color:var(--purple-light);}
+
+.s-nav{flex:1;padding:10px 8px;}
+.s-section{margin-bottom:4px;}
+.s-label{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:12px 8px 5px;}
+.s-item{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:8px;cursor:pointer;color:var(--muted);transition:all .15s;font-size:12.5px;margin-bottom:1px;white-space:nowrap;}
+.s-item i{font-size:15px;width:16px;flex-shrink:0;}
+.s-item:hover{background:rgba(255,255,255,.04);color:var(--text2);}
+.s-item.active{background:var(--purple-dim);color:var(--purple-light);}
+
+.s-user{padding:12px 14px;border-top:.5px solid var(--border);display:flex;align-items:center;gap:9px;}
+.s-avatar{width:30px;height:30px;border-radius:50%;background:var(--purple-dim);border:1.5px solid rgba(124,58,237,.3);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--purple-light);flex-shrink:0;}
+.s-user-info .name{font-size:12px;font-weight:600;color:var(--text);}
+.s-user-info .role{font-size:10px;color:var(--muted);}
+.s-user-dot{width:6px;height:6px;border-radius:50%;background:var(--green);margin-left:auto;flex-shrink:0;}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+
+/* TOPBAR */
+.topbar{padding:12px 20px;border-bottom:.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg2);flex-shrink:0;}
+.tb-left h1{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;color:#fff;}
+.tb-left p{font-size:11.5px;color:var(--muted);margin-top:1px;}
+.tb-right{display:flex;align-items:center;gap:10px;}
+.searchbar{display:flex;align-items:center;gap:8px;background:var(--bg3);border:.5px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--muted);font-size:12px;min-width:180px;}
+.searchbar i{font-size:13px;}
+.searchbar span{font-size:11px;}
+.searchbar kbd{margin-left:auto;font-size:10px;background:var(--bg4);padding:2px 5px;border-radius:4px;color:var(--muted);}
+.period-select{display:flex;align-items:center;gap:6px;background:var(--bg3);border:.5px solid var(--border);border-radius:8px;padding:6px 10px;font-size:11.5px;color:var(--text2);cursor:pointer;}
+.period-select i{font-size:13px;}
+.tb-btn{width:32px;height:32px;border-radius:8px;background:var(--bg3);border:.5px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;position:relative;transition:all .15s;}
+.tb-btn:hover{background:var(--bg4);color:var(--text2);}
+
+/* AVATAR DROPDOWN */
+.av-wrap{position:relative;}
+.av-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg2);border:.5px solid var(--border2);border-radius:12px;padding:6px;min-width:200px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,.4);display:none;animation:fadeUp .15s ease;}
+.av-dropdown.open{display:block;}
+.av-header{padding:10px 10px 8px;border-bottom:.5px solid var(--border);margin-bottom:4px;}
+.av-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text);}
+.av-role{font-size:11px;color:var(--muted);margin-top:1px;}
+.av-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;color:var(--text2);font-size:12.5px;transition:all .15s;}
+.av-item:hover{background:rgba(255,255,255,.04);color:var(--text);}
+.av-item i{font-size:15px;color:var(--muted);}
+.av-item.danger{color:var(--red);}
+.av-item.danger i{color:var(--red);}
+.av-item.danger:hover{background:rgba(248,113,113,.08);}
+.av-sep{height:.5px;background:var(--border);margin:4px 0;}
+.notif-dot{position:absolute;top:7px;right:7px;width:5px;height:5px;background:var(--purple-light);border-radius:50%;}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
+.content::-webkit-scrollbar{width:4px;}
+.content::-webkit-scrollbar-track{background:transparent;}
+.content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+/* PERIOD FILTER PILLS */
+.period-pills{display:flex;gap:4px;}
+.ppill{padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;color:var(--muted);border:.5px solid transparent;transition:all .15s;}
+.ppill:hover{background:var(--bg4);}
+.ppill.active{background:var(--bg4);color:var(--text);border-color:var(--border2);}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+.kpi{background:var(--bg2);border:.5px solid var(--border);border-radius:12px;padding:14px 14px 12px;}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.kpi-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.ki-purple{background:rgba(124,58,237,.15);color:var(--purple-light);}
+.ki-blue{background:rgba(96,165,250,.15);color:var(--blue);}
+.ki-green{background:rgba(74,222,128,.15);color:var(--green);}
+.ki-pink{background:rgba(244,114,182,.15);color:var(--pink);}
+.ki-amber{background:rgba(251,191,36,.15);color:var(--amber);}
+.kpi-label{font-size:11px;color:var(--muted);margin-bottom:4px;}
+.kpi-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#fff;line-height:1;}
+.kpi-sub{display:flex;align-items:center;gap:6px;margin-top:5px;}
+.kpi-badge{font-size:11px;font-weight:600;}
+.kpi-badge.up{color:var(--green);}
+.kpi-badge.dn{color:var(--red);}
+.kpi-meta{font-size:10px;color:var(--muted);}
+
+/* MAIN GRID */
+.grid2{display:grid;grid-template-columns:1fr 270px;gap:14px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+
+/* PANEL */
+.panel{background:var(--bg2);border:.5px solid var(--border);border-radius:12px;padding:16px;}
+.panel-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
+.panel-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);}
+.panel-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.see-all{font-size:11px;color:var(--purple-light);cursor:pointer;flex-shrink:0;margin-left:10px;}
+.see-all:hover{text-decoration:underline;}
+
+/* CHART PERIOD TABS */
+.chart-tabs{display:flex;gap:3px;}
+.ctab{padding:3px 9px;border-radius:5px;font-size:11px;cursor:pointer;color:var(--muted);transition:all .15s;}
+.ctab.active{background:var(--bg4);color:var(--text);border:.5px solid var(--border2);}
+
+/* PLATFORMS */
+.plat-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:.5px solid rgba(255,255,255,.04);}
+.plat-item:last-child{border:none;}
+.plat-left{display:flex;align-items:center;gap:9px;}
+.plat-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;}
+.pi-yt{background:rgba(239,68,68,.12);color:#f87171;}
+.pi-ig{background:rgba(225,48,108,.12);color:#e1306c;}
+.pi-tk{background:rgba(255,255,255,.07);color:var(--text);}
+.pi-tw{background:rgba(29,161,242,.12);color:#1da1f2;}
+.pi-tv{background:rgba(145,70,255,.12);color:#9146ff;}
+.plat-name{font-size:12px;font-weight:600;color:var(--text2);}
+.plat-subs{font-size:10px;color:var(--muted);}
+.plat-pct{font-size:11px;font-weight:600;color:var(--green);}
+
+/* AGENDA */
+.agenda-day{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;margin-top:4px;}
+.agenda-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:.5px solid rgba(255,255,255,.04);}
+.agenda-item:last-child{border:none;}
+.agenda-check{width:15px;height:15px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:all .2s;}
+.agenda-check.done{background:var(--purple);border-color:var(--purple);}
+.agenda-check.done i{font-size:8px;color:#fff;}
+.agenda-plat{width:16px;height:16px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
+.agenda-task{flex:1;font-size:12px;color:var(--text2);}
+.agenda-task.done{text-decoration:line-through;color:var(--muted);}
+.agenda-time{font-size:10px;color:var(--muted);}
+
+/* REVENUE PANEL */
+.rev-big{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#fff;margin-bottom:2px;}
+.rev-sub{font-size:11px;color:var(--green);margin-bottom:12px;}
+
+/* SOURCES */
+.source-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;}
+.source-left{display:flex;align-items:center;gap:7px;}
+.src-dot{width:7px;height:7px;border-radius:50%;}
+.src-name{font-size:12px;color:var(--text2);}
+.src-right{display:flex;align-items:center;gap:5px;}
+.src-amt{font-size:12px;font-weight:600;color:var(--text);}
+.src-pct{font-size:10px;color:var(--muted);}
+.donut-center{text-align:center;margin:8px 0;}
+
+/* AUDIENCE */
+.aud-row{display:flex;align-items:center;gap:8px;padding:4px 0;}
+.aud-label{font-size:11px;color:var(--text2);width:36px;flex-shrink:0;}
+.aud-bar-wrap{flex:1;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;}
+.aud-bar{height:100%;border-radius:3px;background:var(--purple);transition:width .8s ease;}
+.aud-pct{font-size:11px;color:var(--muted);width:30px;text-align:right;}
+.gender-row{display:flex;gap:16px;margin-top:12px;justify-content:center;}
+.gender-badge{text-align:center;}
+.gender-big{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#fff;}
+.gender-label{font-size:10px;color:var(--muted);margin-top:2px;}
+
+/* UPCOMING CONTENT */
+.content-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid rgba(255,255,255,.04);}
+.content-item:last-child{border:none;}
+.content-thumb{width:40px;height:40px;border-radius:8px;background:var(--bg4);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.content-title{font-size:12px;font-weight:500;color:var(--text2);}
+.content-meta{font-size:10px;color:var(--muted);margin-top:2px;}
+.content-status{margin-left:auto;flex-shrink:0;}
+.status-pill{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;}
+.sp-prog{background:rgba(96,165,250,.12);color:var(--blue);}
+.sp-venir{background:rgba(124,58,237,.12);color:var(--purple-light);}
+.sp-brouillon{background:rgba(251,191,36,.1);color:var(--amber);}
+
+/* DEALS */
+.deal-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:.5px solid rgba(255,255,255,.04);}
+.deal-item:last-child{border:none;}
+.deal-left{display:flex;align-items:center;gap:9px;}
+.deal-logo{width:28px;height:28px;border-radius:6px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--muted);}
+.deal-name{font-size:12px;font-weight:600;color:var(--text2);}
+.deal-type{font-size:10px;color:var(--muted);}
+.deal-right{text-align:right;}
+.deal-amt{font-size:13px;font-weight:700;color:#fff;}
+.deal-badge{font-size:10px;padding:2px 7px;border-radius:20px;margin-top:2px;font-weight:600;display:inline-block;}
+.db-neg{background:rgba(251,191,36,.1);color:var(--amber);}
+.db-prop{background:rgba(96,165,250,.1);color:var(--blue);}
+.db-conf{background:rgba(74,222,128,.1);color:var(--green);}
+
+/* ACTIVITY */
+.activity-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+.act-item{background:var(--bg2);border:.5px solid var(--border);border-radius:10px;padding:12px;}
+.act-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;margin-bottom:10px;}
+.act-label{font-size:12px;font-weight:600;color:var(--text2);}
+.act-desc{font-size:11px;color:var(--muted);margin-top:2px;}
+.act-time{font-size:10px;color:var(--muted);margin-top:6px;}
+
+/* LOADING OVERLAY */
+.loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .5s;}
+.loading.hide{opacity:0;pointer-events:none;}
+.loading-logo{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff;margin-bottom:8px;}
+.loading-logo span{color:var(--purple-light);}
+.loading-bar{width:200px;height:2px;background:var(--border2);border-radius:1px;overflow:hidden;margin-top:24px;}
+.loading-progress{height:100%;background:var(--purple-light);border-radius:1px;animation:loadprog 1.5s ease forwards;}
+@keyframes loadprog{from{width:0}to{width:100%}}
+.loading-text{font-size:12px;color:var(--muted);margin-top:12px;}
+
+/* DEMO BADGE */
+.demo-banner{background:rgba(251,191,36,.08);border-bottom:.5px solid rgba(251,191,36,.15);padding:6px 20px;display:flex;align-items:center;gap:8px;font-size:11px;color:var(--amber);flex-shrink:0;}
+.demo-banner a{color:var(--amber);text-decoration:underline;cursor:pointer;margin-left:auto;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeUp .5s ease both;}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading" id="loading">
+  <div class="loading-logo">Alltooly</span></div>
+  <div style="font-size:12px;color:var(--muted);">Chargement de tes données...</div>
+  <div class="loading-bar"><div class="loading-progress"></div></div>
+  <div class="loading-text" id="load-status">Connexion à Stripe...</div>
+</div>
+
+<div class="app" id="app" style="opacity:0;transition:opacity .5s;">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="s-logo">
+      <div class="s-logo-top">ALLTOOLY</div>
+      <div class="s-logo-brand">Alltooly</span></div>
+    </div>
+    <nav class="s-nav">
+      <div class="s-section">
+        <div class="s-item active"><i class="ti ti-home"></i> Accueil</div>
+        <div class="s-item"><i class="ti ti-calendar"></i> Calendrier</div>
+        <div class="s-item"><i class="ti ti-video"></i> Contenu</div>
+        <div class="s-item"><i class="ti ti-bulb"></i> Idées</div>
+        <div class="s-item"><i class="ti ti-books"></i> Bibliothèque</div>
+        <div class="s-item"><i class="ti ti-template"></i> Modèles</div>
+        <div class="s-item"><i class="ti ti-chart-line"></i> Analytics</div>
+      </div>
+      <div class="s-section">
+        <div class="s-label">Mon Business</div>
+        <div class="s-item"><i class="ti ti-coin"></i> Revenus</div>
+        <div class="s-item"><i class="ti ti-repeat"></i> Abonnements</div>
+        <div class="s-item"><i class="ti ti-shopping-bag"></i> Produits</div>
+        <div class="s-item"><i class="ti ti-star"></i> Sponsors</div>
+        <div class="s-item"><i class="ti ti-heart"></i> Dons</div>
+      </div>
+      <div class="s-section">
+        <div class="s-label">Audience</div>
+        <div class="s-item"><i class="ti ti-users"></i> Communauté</div>
+        <div class="s-item"><i class="ti ti-mail"></i> Emails</div>
+        <div class="s-item"><i class="ti ti-message"></i> Commentaires</div>
+      </div>
+      <div class="s-section">
+        <div class="s-label">Ressources</div>
+        <div class="s-item"><i class="ti ti-file-text"></i> Documents</div>
+        <div class="s-item"><i class="ti ti-file-invoice"></i> Contrats</div>
+        <div class="s-item"><i class="ti ti-building-store"></i> Marques</div>
+      </div>
+      <div class="s-section">
+        <div class="s-label">Outils</div>
+        <div class="s-item"><i class="ti ti-settings-automation"></i> Automations</div>
+        <div class="s-item"><i class="ti ti-plug"></i> Intégrations</div>
+        <div class="s-item" onclick="openSettings()"><i class="ti ti-settings"></i> Paramètres</div>
+      </div>
+    </nav>
+    <div class="s-user">
+      <div class="s-avatar" id="s-av">M</div>
+      <div class="s-user-info">
+        <div class="name" id="s-name">Maori</div>
+        <div class="role" id="s-role">Créateur</div>
+      </div>
+      <div class="s-user-dot"></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- DEMO BANNER -->
+    <div class="demo-banner" id="demo-banner" style="display:none;">
+      <i class="ti ti-info-circle" style="font-size:14px;"></i>
+      Mode démonstration — Les données affichées sont simulées.
+      <a onclick="window.location.href='index.html'">Connecter mes comptes →</a>
+    </div>
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="tb-left">
+        <h1 id="tb-greeting">Bonjour Maori 👋</h1>
+        <p>Tout est sous contrôle. Continue à créer et à inspirer.</p>
+      </div>
+      <div class="tb-right">
+        <div class="searchbar"><i class="ti ti-search"></i><span>Rechercher...</span><kbd>⌘K</kbd></div>
+        <div class="tb-btn" id="theme-btn" onclick="toggleTheme()" title="Changer le thème"><i class="ti ti-sun" style="font-size:15px;" id="theme-icon"></i></div>
+        <div class="tb-btn" style="position:relative;"><i class="ti ti-bell" style="font-size:15px;"></i><div class="notif-dot"></div></div>
+        <div class="av-wrap">
+          <div class="s-avatar" id="tb-av" style="width:32px;height:32px;font-size:13px;cursor:pointer;" onclick="toggleAvMenu(event)">M</div>
+          <div class="av-dropdown" id="av-menu">
+            <div class="av-header">
+              <div class="av-name" id="av-name">Maori</div>
+              <div class="av-role" id="av-role">Créateur</div>
+            </div>
+            <div class="av-item" onclick="openSettings()"><i class="ti ti-settings"></i> Paramètres</div>
+            <div class="av-item" onclick="manageKeys()"><i class="ti ti-plug"></i> Gérer mes connexions</div>
+            <div class="av-sep"></div>
+            <div class="av-item danger" onclick="logout()"><i class="ti ti-logout"></i> Se déconnecter</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERIOD ROW -->
+    <div style="padding:10px 20px 0;display:flex;align-items:center;justify-content:flex-end;flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:6px;background:var(--bg2);border:.5px solid var(--border);border-radius:8px;padding:4px 6px;">
+        <i class="ti ti-calendar" style="font-size:13px;color:var(--muted);"></i>
+        <div class="period-pills">
+          <div class="ppill" onclick="setPeriod(7,this)">7 jours</div>
+          <div class="ppill active" onclick="setPeriod(30,this)">30 jours</div>
+          <div class="ppill" onclick="setPeriod(90,this)">90 jours</div>
+          <div class="ppill" onclick="setPeriod(365,this)">1 an</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCROLLABLE CONTENT -->
+    <div class="content" id="main-content">
+
+      <!-- KPI -->
+      <div class="kpi-row fade-in">
+        <div class="kpi">
+          <div class="kpi-top"><div class="kpi-icon ki-purple"><i class="ti ti-users"></i></div></div>
+          <div class="kpi-label">Abonnés totaux</div>
+          <div class="kpi-val" id="kv-subs">128,4K</div>
+          <div class="kpi-sub"><span class="kpi-badge up" id="kb-subs">+ 12,6%</span><span class="kpi-meta">vs 30 derniers jours</span></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-top"><div class="kpi-icon ki-blue"><i class="ti ti-eye"></i></div></div>
+          <div class="kpi-label">Vues totales</div>
+          <div class="kpi-val" id="kv-views">3,2M</div>
+          <div class="kpi-sub"><span class="kpi-badge up" id="kb-views">+ 18,7%</span><span class="kpi-meta">vs 30 derniers jours</span></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-top"><div class="kpi-icon ki-green"><i class="ti ti-coin"></i></div></div>
+          <div class="kpi-label">Revenus totaux</div>
+          <div class="kpi-val" id="kv-rev">12 890 €</div>
+          <div class="kpi-sub"><span class="kpi-badge up" id="kb-rev">+ 22,1%</span><span class="kpi-meta">vs 30 derniers jours</span></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-top"><div class="kpi-icon ki-pink"><i class="ti ti-heart"></i></div></div>
+          <div class="kpi-label">Engagement moyen</div>
+          <div class="kpi-val" id="kv-eng">7,6%</div>
+          <div class="kpi-sub"><span class="kpi-badge up" id="kb-eng">+ 8,3%</span><span class="kpi-meta">vs 30 derniers jours</span></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-top"><div class="kpi-icon ki-amber"><i class="ti ti-video"></i></div></div>
+          <div class="kpi-label">Contenus publiés</div>
+          <div class="kpi-val" id="kv-posts">48</div>
+          <div class="kpi-sub"><span class="kpi-badge up" id="kb-posts">+ 14</span><span class="kpi-meta">vs 30 derniers jours</span></div>
+        </div>
+      </div>
+
+      <!-- PERF + PLATEFORMES -->
+      <div class="grid2 fade-in">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Aperçu des performances</div>
+              <div class="panel-sub">Vue d'ensemble sur toutes les plateformes</div>
+            </div>
+            <div class="chart-tabs">
+              <div class="ctab" onclick="setChart(7,this)">7 jours</div>
+              <div class="ctab active" onclick="setChart(30,this)">30 jours</div>
+              <div class="ctab" onclick="setChart(90,this)">90 jours</div>
+              <div class="ctab" onclick="setChart(365,this)">1 an</div>
+            </div>
+          </div>
+          <!-- LEGEND -->
+          <div style="display:flex;gap:14px;margin-bottom:10px;">
+            <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><span style="width:10px;height:3px;border-radius:2px;background:#a78bfa;display:inline-block;"></span>Vues</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><span style="width:10px;height:3px;border-radius:2px;background:#60a5fa;display:inline-block;border-top:2px dashed #60a5fa;height:0;"></span>Abonnés</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><span style="width:10px;height:3px;border-radius:2px;background:#f472b6;display:inline-block;"></span>Engagement</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><span style="width:10px;height:3px;border-radius:2px;background:#4ade80;display:inline-block;"></span>Revenus</div>
+          </div>
+          <div style="position:relative;height:200px;">
+            <canvas id="perfChart" role="img" aria-label="Graphique performances 30 jours">Données de performances sur 30 jours.</canvas>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">Plateformes</div>
+            <span class="see-all">Voir tout</span>
+          </div>
+          <div class="plat-item">
+            <div class="plat-left"><div class="plat-icon pi-yt"><i class="ti ti-brand-youtube"></i></div><div><div class="plat-name">YouTube</div><div class="plat-subs" id="yt-subs">—</div></div></div>
+            <span class="plat-pct" id="yt-growth">—</span>
+          </div>
+          <div class="plat-item">
+            <div class="plat-left"><div class="plat-icon pi-ig"><i class="ti ti-brand-instagram"></i></div><div><div class="plat-name">Instagram</div><div class="plat-subs" style="color:var(--muted);font-size:10px;">Non connecté</div></div></div>
+            <span class="plat-pct" style="color:var(--muted);font-size:10px;">—</span>
+          </div>
+          <div class="plat-item">
+            <div class="plat-left"><div class="plat-icon pi-tk"><i class="ti ti-brand-tiktok"></i></div><div><div class="plat-name">TikTok</div><div class="plat-subs" style="color:var(--muted);font-size:10px;">Non connecté</div></div></div>
+            <span class="plat-pct" style="color:var(--muted);font-size:10px;">—</span>
+          </div>
+          <div class="plat-item">
+            <div class="plat-left"><div class="plat-icon pi-tw"><i class="ti ti-brand-twitter"></i></div><div><div class="plat-name">X (Twitter)</div><div class="plat-subs" style="color:var(--muted);font-size:10px;">Non connecté</div></div></div>
+            <span class="plat-pct" style="color:var(--muted);font-size:10px;">—</span>
+          </div>
+          <div class="plat-item">
+            <div class="plat-left"><div class="plat-icon pi-tv"><i class="ti ti-brand-twitch"></i></div><div><div class="plat-name">Twitch</div><div class="plat-subs" style="color:var(--muted);font-size:10px;">Non connecté</div></div></div>
+            <span class="plat-pct" style="color:var(--muted);font-size:10px;">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- REV + SOURCES + AUDIENCE + AGENDA -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 280px;gap:14px;" class="fade-in">
+
+        <!-- REVENUS -->
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Revenus</div><span class="see-all">Voir le rapport</span></div>
+          <div class="rev-big" id="rev-big">12 890 €</div>
+          <div class="rev-sub" id="rev-sub">↑ 22,1% vs 30 derniers jours</div>
+          <div style="position:relative;height:90px;">
+            <canvas id="revChart" role="img" aria-label="Revenus par semaine">Revenus semaine par semaine.</canvas>
+          </div>
+        </div>
+
+        <!-- SOURCES -->
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Sources de revenus</div><span class="see-all">Voir le rapport</span></div>
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div style="position:relative;width:80px;height:80px;flex-shrink:0;">
+              <canvas id="donut" width="80" height="80" role="img" aria-label="Sources de revenus">Abonnements 33%, Sponsors 31%, Produits 21%, Dons 15%.</canvas>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                <div style="font-family:'Syne',sans-serif;font-size:10px;font-weight:800;color:#fff;" id="donut-total">0€</div>
+                <div style="font-size:8px;color:var(--muted);">Total</div>
+              </div>
+            </div>
+            <div style="flex:1;" id="sources-list">
+              <div style="font-size:11px;color:var(--muted);padding:8px 0;">Connecte Stripe pour voir tes sources de revenus.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AUDIENCE -->
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Audience</div><span class="see-all">Voir le rapport</span></div>
+          <div style="display:flex;gap:16px;">
+            <div style="flex:1;">
+              <div style="font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;">Âge</div>
+              <div class="aud-row"><div class="aud-label">13-17</div><div class="aud-bar-wrap"><div class="aud-bar" id="age-13" style="width:0%;"></div></div><div class="aud-pct" id="age-13-pct">—</div></div>
+              <div class="aud-row"><div class="aud-label">18-24</div><div class="aud-bar-wrap"><div class="aud-bar" id="age-18" style="width:0%;"></div></div><div class="aud-pct" id="age-18-pct">—</div></div>
+              <div class="aud-row"><div class="aud-label">25-34</div><div class="aud-bar-wrap"><div class="aud-bar" id="age-25" style="width:0%;"></div></div><div class="aud-pct" id="age-25-pct">—</div></div>
+              <div class="aud-row"><div class="aud-label">35-44</div><div class="aud-bar-wrap"><div class="aud-bar" id="age-35" style="width:0%;"></div></div><div class="aud-pct" id="age-35-pct">—</div></div>
+              <div class="aud-row"><div class="aud-label">45+</div><div class="aud-bar-wrap"><div class="aud-bar" id="age-45" style="width:0%;"></div></div><div class="aud-pct" id="age-45-pct">—</div></div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;">
+              <div style="text-align:center;">
+                <div style="font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;">Genre</div>
+                <div style="width:60px;height:60px;position:relative;">
+                  <canvas id="genderChart" width="60" height="60" role="img" aria-label="Répartition genre">Données genre non disponibles.</canvas>
+                </div>
+              </div>
+              <div class="gender-row" style="flex-direction:column;gap:4px;margin-top:0;">
+                <div class="gender-badge"><div class="gender-big" id="gender-m">—</div><div class="gender-label">Hommes</div></div>
+                <div class="gender-badge"><div class="gender-big" id="gender-f" style="font-size:14px;color:var(--text2);">—</div><div class="gender-label">Femmes</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AGENDA -->
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Agenda</div><span class="see-all">Voir tout</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 0;gap:8px;">
+            <i class="ti ti-calendar-off" style="font-size:24px;color:var(--muted);"></i>
+            <div style="font-size:12px;color:var(--muted);text-align:center;">Connexion Google Calendar<br>disponible prochainement</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROCHAINS CONTENUS + DEALS -->
+      <div style="display:grid;grid-template-columns:1fr 280px;gap:14px;" class="fade-in">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Prochains contenus</div><span class="see-all">Voir tout</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 0;gap:8px;">
+            <i class="ti ti-video-off" style="font-size:24px;color:var(--muted);"></i>
+            <div style="font-size:12px;color:var(--muted);text-align:center;">Aucun contenu planifié<br>Connecte ton calendrier pour voir tes prochaines publications</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Deals en cours</div><span class="see-all">Voir tout</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 0;gap:8px;">
+            <i class="ti ti-handshake" style="font-size:24px;color:var(--muted);"></i>
+            <div style="font-size:12px;color:var(--muted);text-align:center;">Aucun deal actif<br>La gestion des partenariats arrive prochainement</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVITE RECENTE -->
+      <div class="panel fade-in">
+        <div class="panel-head"><div class="panel-title">Activité récente</div><span class="see-all">Voir tout</span></div>
+        <div style="display:flex;align-items:center;justify-content:center;padding:20px 0;gap:10px;">
+          <i class="ti ti-clock" style="font-size:20px;color:var(--muted);"></i>
+          <div style="font-size:12px;color:var(--muted);">Aucune activité récente — connecte tes plateformes pour voir tes stats en direct</div>
+        </div>
+      </div>
+
+      <div style="height:20px;"></div>
+    </div><!-- end content -->
+  </div><!-- end main -->
+</div><!-- end app -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ─── STATE ──────────────────────────────────────────────────────
+let currentPeriod = 30;
+let perfInst, revInst, donutInst, genderInst;
+let refreshTimer = null;
+
+// Stockage des vraies données récupérées
+const REAL = {
+  stripe: null,   // { total30, total7, total90, total365, weeklyBars, prevTotal30 }
+  youtube: null,  // { subs, views, videos, prevSubs }
+  isDemo: false
+};
+
+// ─── HELPERS ────────────────────────────────────────────────────
+function fmtNum(n){
+  if(n >= 1000000) return (n/1000000).toFixed(1).replace('.',',')+'M';
+  if(n >= 1000) return (n/1000).toFixed(1).replace('.',',')+'K';
+  return n.toString();
+}
+function fmtEur(n){
+  return n.toLocaleString('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:0})+' €';
+}
+function fmtPct(now, prev){
+  if(!prev || prev===0) return '—';
+  const pct = ((now - prev) / prev * 100).toFixed(1);
+  return (pct >= 0 ? '+ ' : '') + pct + '%';
+}
+function showLive(id, val){ const el=document.getElementById(id); if(el) el.textContent=val; }
+
+// ─── DEMO DATA ──────────────────────────────────────────────────
+const DEMO = {
+  7:{subs:'31,2K',views:'812K',rev:'3 120 €',eng:'8,1%',posts:'12',kbSubs:'+ 5,2%',kbViews:'+ 9,4%',kbRev:'+ 11,3%',kbEng:'+ 2,1%',kbPosts:'+ 3',labels:['9 Mai','10','11','12','13','14','15 Mai'],vues:[9000,11000,8500,13000,12000,14500,16000],abonnes:[4000,5500,4800,7200,6800,8100,9400],engagement:[320,410,290,560,480,620,710],revenus:[280,350,290,480,440,560,620],revBig:'3 120 €',revSub:'↑ 11,3% vs 7 derniers jours',revBars:[520,680,790,640,490],donutTotal:'3 120€'},
+  30:{subs:'128,4K',views:'3,2M',rev:'12 890 €',eng:'7,6%',posts:'48',kbSubs:'+ 12,6%',kbViews:'+ 18,7%',kbRev:'+ 22,1%',kbEng:'+ 8,3%',kbPosts:'+ 14',labels:['1 Mai','6 Mai','11 Mai','16 Mai','21 Mai','26 Mai','31 Mai'],vues:[42000,55000,48000,68540,72000,79000,85000],abonnes:[28000,31000,35000,42360,45000,50000,54000],engagement:[2800,3400,2900,4200,3900,4600,5100],revenus:[1200,1500,1800,2450,2600,2900,3200],revBig:'12 890 €',revSub:'↑ 22,1% vs 30 derniers jours',revBars:[1800,2200,2600,3200,3090],donutTotal:'12 890€'},
+  90:{subs:'128,4K',views:'9,6M',rev:'38 670 €',eng:'7,2%',posts:'142',kbSubs:'+ 34,1%',kbViews:'+ 41,2%',kbRev:'+ 58,3%',kbEng:'+ 5,1%',kbPosts:'+ 38',labels:['Fév','Mar','Avr','Mai'],vues:[120000,180000,250000,340000],abonnes:[80000,110000,150000,210000],engagement:[8000,12000,18000,24000],revenus:[5400,7200,9800,12890],revBig:'38 670 €',revSub:'↑ 58,3% vs 90 derniers jours',revBars:[7200,8900,10100,12300,38670],donutTotal:'38 670€'},
+  365:{subs:'128,4K',views:'38,4M',rev:'154 680 €',eng:'6,8%',posts:'520',kbSubs:'+ 142%',kbViews:'+ 210%',kbRev:'+ 310%',kbEng:'+ 12%',kbPosts:'+ 180',labels:['Juil','Aoû','Sep','Oct','Nov','Déc','Jan','Fév','Mar','Avr','Mai'],vues:[40000,55000,70000,90000,110000,130000,160000,190000,220000,280000,340000],abonnes:[20000,28000,38000,52000,68000,84000,100000,130000,160000,190000,210000],engagement:[2000,2800,3500,4800,6200,7800,9500,12000,14000,18000,22000],revenus:[4000,5500,7200,9000,11000,13500,16000,19000,22000,27000,34000],revBig:'154 680 €',revSub:'↑ 310% vs l\'année dernière',revBars:[28000,31000,35000,42000,154680],donutTotal:'154 680€'}
+};
+
+// ─── STRIPE REAL DATA ────────────────────────────────────────────
+async function loadStripe(){
+  const key = localStorage.getItem('mao_stripe');
+  if(!key || REAL.isDemo) return;
+  try {
+    showLive('load-status','Connexion à Stripe...');
+    const now = Math.floor(Date.now()/1000);
+
+    // Récupère les charges des 60 derniers jours (pour pouvoir comparer periods)
+    const days60 = now - 60*24*3600;
+    let allCharges = [];
+    let hasMore = true;
+    let startAfter = '';
+    while(hasMore && allCharges.length < 500){
+      const url = `https://api.stripe.com/v1/charges?created[gte]=${days60}&limit=100&status=succeeded${startAfter?'&starting_after='+startAfter:''}`;
+      const res = await fetch(url,{headers:{'Authorization':'Bearer '+key}});
+      if(!res.ok) break;
+      const data = await res.json();
+      allCharges = allCharges.concat(data.data);
+      hasMore = data.has_more;
+      if(data.data.length > 0) startAfter = data.data[data.data.length-1].id;
+      else break;
+    }
+
+    // Calcule totaux par période
+    const day7   = now - 7*24*3600;
+    const day30  = now - 30*24*3600;
+    const day60  = now - 60*24*3600;
+    const day90  = now - 90*24*3600;
+
+    const sum = (from, to) => allCharges
+      .filter(c => c.created >= from && (to ? c.created <= to : true))
+      .reduce((s,c) => s + c.amount, 0) / 100;
+
+    const total30  = sum(day30);
+    const total7   = sum(day7);
+    const prev30   = sum(day60, day30); // période précédente pour le %
+    const total90  = sum(day90);
+
+    // Barres hebdomadaires sur les 5 dernières semaines
+    const weeklyBars = [];
+    for(let i=4; i>=0; i--){
+      const wStart = now - (i+1)*7*24*3600;
+      const wEnd   = now - i*7*24*3600;
+      weeklyBars.push(sum(wStart, wEnd));
+    }
+
+    // Courbe journalière sur 30 jours
+    const dailyRevLabels = [];
+    const dailyRevData = [];
+    for(let i=29; i>=0; i--){
+      const dStart = now - (i+1)*24*3600;
+      const dEnd   = now - i*24*3600;
+      const d = new Date((now - i*24*3600)*1000);
+      dailyRevLabels.push(d.getDate()+' '+['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'][d.getMonth()]);
+      dailyRevData.push(sum(dStart, dEnd));
+    }
+
+    REAL.stripe = { total30, total7, total90, prev30, weeklyBars, dailyRevLabels, dailyRevData };
+    updateStripeUI();
+  } catch(e){ console.log('Stripe error:',e); }
+}
+
+function updateStripeUI(){
+  if(!REAL.stripe) return;
+  const s = REAL.stripe;
+  const p = currentPeriod;
+  const total = p===7 ? s.total7 : p===90 ? s.total90 : s.total30;
+  const pct = fmtPct(s.total30, s.prev30);
+  const dir = s.total30 >= s.prev30 ? '↑' : '↓';
+
+  showLive('kv-rev', fmtEur(total));
+  showLive('rev-big', fmtEur(total));
+  showLive('donut-total', fmtEur(total).replace(' €','€'));
+  showLive('kb-rev', (s.total30 >= s.prev30 ? '+ ' : '') + Math.abs(((s.total30 - s.prev30)/(s.prev30||1))*100).toFixed(1)+'%');
+  showLive('rev-sub', dir+' '+pct+' vs période précédente');
+  buildRevReal();
+  updateSourcesUI();
+}
+
+function updateSourcesUI(){
+  // Sources de revenus depuis Stripe : on affiche le total réel
+  // Les sous-catégories (abonnements, sponsors...) ne sont pas accessibles via l'API Stripe standard
+  // → on affiche uniquement le total et un message
+  const s = REAL.stripe;
+  const list = document.getElementById('sources-list');
+  if(!list) return;
+  if(!s || s.total30 === 0){
+    list.innerHTML = '<div style="font-size:11px;color:var(--muted);padding:8px 0;">Aucun revenu sur les 30 derniers jours.</div>';
+    // Donut vide
+    if(donutInst) donutInst.destroy();
+    donutInst = new Chart(document.getElementById('donut'),{
+      type:'doughnut',
+      data:{labels:['Aucun revenu'],datasets:[{data:[1],backgroundColor:['rgba(255,255,255,0.05)'],borderWidth:0}]},
+      options:{responsive:false,cutout:'72%',plugins:{legend:{display:false},tooltip:{enabled:false}}}
+    });
+    showLive('donut-total','0€');
+    return;
+  }
+  const total = s.total30;
+  // On reconstruit le donut avec juste "Stripe" en attendant les vraies catégories
+  list.innerHTML = `
+    <div class="source-row">
+      <div class="source-left"><div class="src-dot" style="background:#a78bfa;"></div><div class="src-name">Stripe (total)</div></div>
+      <div class="src-right"><span class="src-amt">${fmtEur(total)}</span><span class="src-pct">100%</span></div>
+    </div>
+    <div style="font-size:10px;color:var(--muted);margin-top:6px;">Détail par source disponible prochainement</div>`;
+  if(donutInst) donutInst.destroy();
+  donutInst = new Chart(document.getElementById('donut'),{
+    type:'doughnut',
+    data:{labels:['Stripe'],datasets:[{data:[total],backgroundColor:['#a78bfa'],borderWidth:0,hoverOffset:4}]},
+    options:{responsive:false,cutout:'72%',plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a28',titleColor:'#f0f0f8',bodyColor:'#a0a0b8'}}}
+  });
+  showLive('donut-total', fmtEur(total).replace(' €','€'));
+}
+
+// ─── AUDIENCE (YouTube Analytics) ───────────────────────────────
+async function loadYouTubeAudience(key, channelId){
+  // YouTube Analytics API — démographiques
+  // Nécessite le scope youtube.readonly — disponible avec Data API key si la chaîne est la sienne
+  // On tente, si erreur on laisse vide sans bruit
+  try {
+    const now = new Date();
+    const end = now.toISOString().split('T')[0];
+    const start30 = new Date(now - 30*24*3600*1000).toISOString().split('T')[0];
+
+    const resAge = await fetch(
+      `https://youtubeanalytics.googleapis.com/v2/reports?ids=channel==${channelId}&startDate=${start30}&endDate=${end}&metrics=viewerPercentage&dimensions=ageGroup,gender&key=${key}`
+    );
+    if(!resAge.ok) return;
+    const ageData = await resAge.json();
+    if(!ageData.rows) return;
+
+    // Calcul âge + genre
+    const ageMap  = {'age13-17':0,'age18-24':0,'age25-34':0,'age35-44':0,'age45-54':0,'age55-64':0,'age65-':0};
+    let male=0, female=0;
+    ageData.rows.forEach(r=>{
+      const gender = r[0]; // 'male' or 'female'
+      const age    = r[1]; // 'age13-17' etc.
+      const pct    = parseFloat(r[2]);
+      if(ageMap[age] !== undefined) ageMap[age] += pct;
+      if(gender==='male')   male   += pct;
+      if(gender==='female') female += pct;
+    });
+    // Normalise male/female
+    const total = male + female;
+    const malePct   = total>0 ? Math.round(male/total*100)   : 0;
+    const femalePct = total>0 ? Math.round(female/total*100) : 0;
+
+    // Âge groupé
+    const age13 = Math.round(ageMap['age13-17']);
+    const age18 = Math.round(ageMap['age18-24']);
+    const age25 = Math.round(ageMap['age25-34']);
+    const age35 = Math.round(ageMap['age35-44']);
+    const age45 = Math.round((ageMap['age45-54']||0)+(ageMap['age55-64']||0)+(ageMap['age65-']||0));
+
+    updateAudienceUI({age13,age18,age25,age35,age45,malePct,femalePct});
+  } catch(e){ console.log('YT Analytics audience error:',e); }
+}
+
+function updateAudienceUI(data){
+  const setBar = (id, pct) => {
+    const bar = document.getElementById(id);
+    const lbl = document.getElementById(id+'-pct');
+    if(bar) bar.style.width = pct+'%';
+    if(lbl) lbl.textContent = pct+'%';
+  };
+  setBar('age-13', data.age13);
+  setBar('age-18', data.age18);
+  setBar('age-25', data.age25);
+  setBar('age-35', data.age35);
+  setBar('age-45', data.age45);
+  showLive('gender-m', data.malePct+'%');
+  showLive('gender-f', data.femalePct+'%');
+  // Rebuild gender donut
+  if(genderInst) genderInst.destroy();
+  genderInst = new Chart(document.getElementById('genderChart'),{
+    type:'doughnut',
+    data:{labels:['Hommes','Femmes'],datasets:[{data:[data.malePct,data.femalePct],backgroundColor:['#a78bfa','#f472b6'],borderWidth:0}]},
+    options:{responsive:false,cutout:'70%',plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(0,0,0,0)',displayColors:false}}}
+  });
+}
+
+function buildRevReal(){
+  if(!REAL.stripe) return;
+  const bars = REAL.stripe.weeklyBars;
+  const labels = ['S1','S2','S3','S4','S5'];
+  if(revInst) revInst.destroy();
+  revInst = new Chart(document.getElementById('revChart'),{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[{data:bars,backgroundColor:'rgba(124,58,237,0.6)',hoverBackgroundColor:'rgba(124,58,237,0.85)',borderRadius:4,borderSkipped:false}]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a28',titleColor:'#f0f0f8',bodyColor:'#a0a0b8',callbacks:{label:ctx=>fmtEur(ctx.parsed.y)}}},
+      scales:{
+        x:{ticks:{color:'#55556a',font:{size:9}},grid:{display:false}},
+        y:{ticks:{color:'#55556a',font:{size:9},callback:v=>v>=1000?Math.round(v/1000)+'k€':v+'€'},grid:{color:'rgba(255,255,255,0.04)'}}
+      }
+    }
+  });
+}
+
+// ─── YOUTUBE REAL DATA ───────────────────────────────────────────
+async function loadYouTube(){
+  const key = localStorage.getItem('mao_youtube');
+  if(!key || REAL.isDemo) return;
+  try {
+    showLive('load-status','Connexion à YouTube...');
+
+    // Stats chaîne
+    const resChannel = await fetch(
+      `https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet&mine=true&key=${key}`
+    );
+    if(!resChannel.ok){ console.log('YT channel error'); return; }
+    const chData = await resChannel.json();
+    if(!chData.items || chData.items.length===0){ console.log('No YT channel found'); return; }
+
+    const stats   = chData.items[0].statistics;
+    const snippet = chData.items[0].snippet;
+    const subs    = parseInt(stats.subscriberCount || 0);
+    const views   = parseInt(stats.viewCount || 0);
+    const videos  = parseInt(stats.videoCount || 0);
+    const channelId = chData.items[0].id;
+
+    REAL.youtube = { subs, views, videos, channelId, snippet };
+    updateYouTubeUI();
+
+    // Charge les 30 dernières vidéos pour le graphique de performances
+    await loadYouTubeVideos(key, channelId);
+
+    // Tente de charger les données démographiques (YouTube Analytics)
+    await loadYouTubeAudience(key, channelId);
+
+  } catch(e){ console.log('YouTube error:',e); }
+}
+
+async function loadYouTubeVideos(key, channelId){
+  try {
+    // Récupère les vidéos récentes
+    const resSearch = await fetch(
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=10&order=date&type=video&key=${key}`
+    );
+    if(!resSearch.ok) return;
+    const searchData = await resSearch.json();
+    if(!searchData.items || searchData.items.length===0) return;
+
+    const videoIds = searchData.items.map(v=>v.id.videoId).join(',');
+
+    // Récupère les stats de ces vidéos
+    const resStats = await fetch(
+      `https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&id=${videoIds}&key=${key}`
+    );
+    if(!resStats.ok) return;
+    const statsData = await resStats.json();
+
+    // Construit les données du graphique
+    const items = statsData.items.reverse(); // ordre chronologique
+    const labels = items.map(v=>{
+      const d = new Date(v.snippet.publishedAt);
+      return d.getDate()+' '+['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'][d.getMonth()];
+    });
+    const vues      = items.map(v=>parseInt(v.statistics.viewCount||0));
+    const likes     = items.map(v=>parseInt(v.statistics.likeCount||0));
+    const comments  = items.map(v=>parseInt(v.statistics.commentCount||0));
+    const engagement = items.map((v,i)=> vues[i]>0 ? Math.round((likes[i]+comments[i])/vues[i]*100*10)/10 : 0);
+
+    REAL.youtube.perfLabels   = labels;
+    REAL.youtube.perfVues     = vues;
+    REAL.youtube.perfLikes    = likes;
+    REAL.youtube.perfEngagement = engagement;
+
+    buildPerfReal();
+  } catch(e){ console.log('YT videos error:',e); }
+}
+
+function updateYouTubeUI(){
+  if(!REAL.youtube) return;
+  const y = REAL.youtube;
+  showLive('kv-subs', fmtNum(y.subs));
+  showLive('kv-views', fmtNum(y.views));
+  showLive('kv-posts', y.videos.toString());
+  // Card Plateformes
+  showLive('yt-subs', fmtNum(y.subs)+' abonnés');
+  const growthEl = document.getElementById('yt-growth');
+  if(growthEl){
+    if(y.prevSubs && y.prevSubs > 0){
+      const pct = ((y.subs - y.prevSubs) / y.prevSubs * 100).toFixed(1);
+      growthEl.textContent = (pct >= 0 ? '↑ ' : '↓ ') + Math.abs(pct) + '%';
+      growthEl.style.color = pct >= 0 ? 'var(--green)' : 'var(--red)';
+    } else {
+      growthEl.textContent = '—';
+      growthEl.style.color = 'var(--muted)';
+    }
+  }
+}
+
+function buildPerfReal(){
+  if(!REAL.youtube || !REAL.youtube.perfLabels) return;
+  const y = REAL.youtube;
+  if(perfInst) perfInst.destroy();
+  perfInst = new Chart(document.getElementById('perfChart'),{
+    type:'line',
+    data:{
+      labels: y.perfLabels,
+      datasets:[
+        {label:'Vues',data:y.perfVues,borderColor:'#a78bfa',backgroundColor:'rgba(167,139,250,0.08)',tension:.4,fill:true,borderWidth:2,pointRadius:3,pointBackgroundColor:'#a78bfa'},
+        {label:'Likes',data:y.perfLikes,borderColor:'#60a5fa',backgroundColor:'transparent',tension:.4,borderWidth:2,borderDash:[4,4],pointRadius:3,pointBackgroundColor:'#60a5fa'},
+        {label:'Engagement %',data:y.perfEngagement,borderColor:'#f472b6',backgroundColor:'transparent',tension:.4,borderWidth:2,pointRadius:3,pointBackgroundColor:'#f472b6'},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#1a1a28',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,
+          titleColor:'#f0f0f8',bodyColor:'#a0a0b8',padding:10,
+          callbacks:{label:ctx=>' '+ctx.dataset.label+': '+ctx.parsed.y.toLocaleString('fr-FR')}
+        }
+      },
+      scales:{
+        x:{ticks:{color:'#55556a',font:{size:10},maxRotation:0},grid:{color:'rgba(255,255,255,0.04)'}},
+        y:{ticks:{color:'#55556a',font:{size:10},callback:v=>v>=1000?Math.round(v/1000)+'K':v},grid:{color:'rgba(255,255,255,0.04)'}}
+      }
+    }
+  });
+}
+
+// ─── CHARTS VIDES (mode réel sans données encore) ────────────────
+function buildPerfEmpty(){
+  if(perfInst) perfInst.destroy();
+  perfInst = new Chart(document.getElementById('perfChart'),{
+    type:'line',
+    data:{labels:[],datasets:[
+      {label:'Vues',data:[],borderColor:'#a78bfa',backgroundColor:'rgba(167,139,250,0.08)',tension:.4,fill:true,borderWidth:2,pointRadius:3,pointBackgroundColor:'#a78bfa'},
+      {label:'Abonnés',data:[],borderColor:'#60a5fa',backgroundColor:'transparent',tension:.4,borderWidth:2,borderDash:[4,4],pointRadius:3,pointBackgroundColor:'#60a5fa'},
+      {label:'Engagement',data:[],borderColor:'#f472b6',backgroundColor:'transparent',tension:.4,borderWidth:2,pointRadius:3,pointBackgroundColor:'#f472b6'},
+      {label:'Revenus',data:[],borderColor:'#4ade80',backgroundColor:'transparent',tension:.4,borderWidth:2,pointRadius:3,pointBackgroundColor:'#4ade80'}
+    ]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{enabled:false},
+        title:{display:true,text:'Connecte YouTube pour voir tes vraies performances',color:'#55556a',font:{size:12},padding:{top:60}}
+      },
+      scales:{
+        x:{ticks:{color:'#55556a',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
+        y:{ticks:{color:'#55556a',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}}
+      }
+    }
+  });
+}
+
+function buildRevEmpty(){
+  if(revInst) revInst.destroy();
+  revInst = new Chart(document.getElementById('revChart'),{
+    type:'bar',
+    data:{labels:['S1','S2','S3','S4','S5'],datasets:[{data:[0,0,0,0,0],backgroundColor:'rgba(124,58,237,0.15)',borderRadius:4,borderSkipped:false}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{enabled:false}},
+      scales:{
+        x:{ticks:{color:'#55556a',font:{size:9}},grid:{display:false}},
+        y:{ticks:{color:'#55556a',font:{size:9},callback:v=>v+'€'},grid:{color:'rgba(255,255,255,0.04)'}}
+      }
+    }
+  });
+}
+
+// ─── CHARTS DEMO / FALLBACK ──────────────────────────────────────
+function buildPerfDemo(p){
+  if(perfInst) perfInst.destroy();
+  const d = DEMO[p];
+  perfInst = new Chart(document.getElementById('perfChart'),{
+    type:'line',
+    data:{
+      labels:d.labels,
+      datasets:[
+        {label:'Vues',data:d.vues,borderColor:'#a78bfa',backgroundColor:'rgba(167,139,250,0.08)',tension:.4,fill:true,borderWidth:2,pointRadius:3,pointBackgroundColor:'#a78bfa'},
+        {label:'Abonnés',data:d.abonnes,borderColor:'#60a5fa',backgroundColor:'transparent',tension:.4,borderWidth:2,borderDash:[4,4],pointRadius:3,pointBackgroundColor:'#60a5fa'},
+        {label:'Engagement',data:d.engagement,borderColor:'#f472b6',backgroundColor:'transparent',tension:.4,borderWidth:2,pointRadius:3,pointBackgroundColor:'#f472b6'},
+        {label:'Revenus',data:d.revenus,borderColor:'#4ade80',backgroundColor:'transparent',tension:.4,borderWidth:2,pointRadius:3,pointBackgroundColor:'#4ade80'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a28',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,titleColor:'#f0f0f8',bodyColor:'#a0a0b8',padding:10,callbacks:{label:ctx=>' '+ctx.dataset.label+': '+ctx.parsed.y.toLocaleString('fr-FR')}}},
+      scales:{x:{ticks:{color:'#55556a',font:{size:10},maxRotation:0},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#55556a',font:{size:10},callback:v=>v>=1000?Math.round(v/1000)+'K':v},grid:{color:'rgba(255,255,255,0.04)'}}}
+    }
+  });
+}
+
+function buildRevDemo(p){
+  if(revInst) revInst.destroy();
+  const d = DEMO[p];
+  revInst = new Chart(document.getElementById('revChart'),{
+    type:'bar',
+    data:{labels:['S1','S2','S3','S4','S5'],datasets:[{data:d.revBars,backgroundColor:'rgba(124,58,237,0.6)',hoverBackgroundColor:'rgba(124,58,237,0.85)',borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a28',titleColor:'#f0f0f8',bodyColor:'#a0a0b8'}},scales:{x:{ticks:{color:'#55556a',font:{size:9}},grid:{display:false}},y:{ticks:{color:'#55556a',font:{size:9},callback:v=>v>=1000?Math.round(v/1000)+'k€':v+'€'},grid:{color:'rgba(255,255,255,0.04)'}}}}
+  });
+}
+
+function buildDonut(){
+  if(donutInst) donutInst.destroy();
+  donutInst = new Chart(document.getElementById('donut'),{
+    type:'doughnut',
+    data:{labels:['Abonnements','Sponsors','Produits','Dons'],datasets:[{data:[4250,4000,2680,1960],backgroundColor:['#a78bfa','#60a5fa','#f472b6','#4ade80'],borderWidth:0,hoverOffset:4}]},
+    options:{responsive:false,cutout:'72%',plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a28',titleColor:'#f0f0f8',bodyColor:'#a0a0b8'}}}
+  });
+}
+
+function buildGender(){
+  if(genderInst) genderInst.destroy();
+  // Donut vide par défaut — sera rempli par updateAudienceUI si YouTube Analytics répond
+  genderInst = new Chart(document.getElementById('genderChart'),{
+    type:'doughnut',
+    data:{labels:['N/A'],datasets:[{data:[1],backgroundColor:['rgba(255,255,255,0.06)'],borderWidth:0}]},
+    options:{responsive:false,cutout:'70%',plugins:{legend:{display:false},tooltip:{enabled:false}}}
+  });
+}
+
+// ─── PERIOD ──────────────────────────────────────────────────────
+function setPeriod(p, el){
+  currentPeriod = p;
+  document.querySelectorAll('.ppill').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+
+  if(REAL.isDemo){
+    // Mode démo : tout depuis DEMO
+    const d = DEMO[p];
+    showLive('kv-subs',d.subs); showLive('kv-views',d.views); showLive('kv-rev',d.rev);
+    showLive('kv-eng',d.eng); showLive('kv-posts',d.posts);
+    showLive('kb-subs',d.kbSubs); showLive('kb-views',d.kbViews); showLive('kb-rev',d.kbRev);
+    showLive('kb-eng',d.kbEng); showLive('kb-posts',d.kbPosts);
+    showLive('rev-big',d.revBig); showLive('rev-sub',d.revSub); showLive('donut-total',d.donutTotal);
+    buildPerfDemo(p); buildRevDemo(p);
+  } else {
+    // Mode réel : si données dispo on les affiche, sinon graphique vide
+    if(REAL.stripe) updateStripeUI();
+    if(REAL.youtube) updateYouTubeUI();
+    if(REAL.youtube && REAL.youtube.perfLabels) buildPerfReal();
+    else buildPerfEmpty();
+    if(REAL.stripe) buildRevReal();
+    else buildRevEmpty();
+  }
+}
+
+function setChart(p, el){
+  document.querySelectorAll('.ctab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  if(REAL.youtube && REAL.youtube.perfLabels) buildPerfReal();
+  else if(!REAL.isDemo) buildPerfEmpty();
+  else buildPerfDemo(p);
+}
+
+// ─── USER ────────────────────────────────────────────────────────
+function loadUser(){
+  const name = localStorage.getItem('mao_name') || 'Maori';
+  const role = localStorage.getItem('mao_role') || 'Créateur';
+  const init = name[0].toUpperCase();
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
+  showLive('tb-greeting', greet+' '+name+' 👋');
+  showLive('s-name', name);
+  showLive('s-role', role);
+  showLive('s-av', init);
+  showLive('tb-av', init);
+  showLive('av-name', name);
+  showLive('av-role', role);
+  if(localStorage.getItem('mao_demo')) document.getElementById('demo-banner').style.display='flex';
+}
+
+// ─── THEME TOGGLE ────────────────────────────────────────────────
+function toggleTheme(){
+  const isLight = document.body.classList.toggle('light');
+  const icon = document.getElementById('theme-icon');
+  icon.className = isLight ? 'ti ti-moon' : 'ti ti-sun';
+  localStorage.setItem('mao_theme', isLight ? 'light' : 'dark');
+}
+
+function loadTheme(){
+  const saved = localStorage.getItem('mao_theme');
+  if(saved === 'light'){
+    document.body.classList.add('light');
+    const icon = document.getElementById('theme-icon');
+    if(icon) icon.className = 'ti ti-moon';
+  }
+}
+
+// ─── REFRESH INDICATOR ──────────────────────────────────────────
+function showRefreshPulse(){
+  const dot = document.querySelector('.s-user-dot');
+  if(dot){ dot.style.background='#fbbf24'; setTimeout(()=>dot.style.background='#4ade80',1000); }
+}
+
+// ─── AVATAR MENU ─────────────────────────────────────────────────
+function toggleAvMenu(e){
+  e.stopPropagation();
+  document.getElementById('av-menu').classList.toggle('open');
+}
+document.addEventListener('click', ()=>{
+  document.getElementById('av-menu')?.classList.remove('open');
+});
+
+function logout(){
+  if(confirm('Tu vas être déconnecté et toutes tes clés API seront effacées. Continuer ?')){
+    clearInterval(refreshTimer);
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.replace('index.html?reset=true');
+  }
+}
+
+function manageKeys(){
+  document.getElementById('av-menu').classList.remove('open');
+  if(confirm('Retourner à la page de configuration pour modifier tes connexions ?')){
+    clearInterval(refreshTimer);
+    window.location.href = 'index.html?reset=true';
+  }
+}
+
+function openSettings(){
+  if(confirm('Réinitialiser la configuration et retourner à l\'accueil ?')){
+    clearInterval(refreshTimer);
+    localStorage.clear();
+    window.location.href = 'index.html?reset=true';
+  }
+}
+
+// ─── FULL REFRESH (called every 90s) ────────────────────────────
+async function refreshAll(){
+  showRefreshPulse();
+  await loadStripe();
+  await loadYouTube();
+}
+
+// ─── INIT ────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', async ()=>{
+  const name  = localStorage.getItem('mao_name');
+  const demo  = localStorage.getItem('mao_demo');
+  if(!name && !demo){ window.location.href='index.html'; return; }
+
+  REAL.isDemo = !!demo;
+  loadTheme();
+  loadUser();
+
+  // Toujours build les charts statiques
+  buildGender();
+  // Sources : vide par défaut, sera rempli par Stripe si connecté
+  updateSourcesUI();
+
+  if(REAL.isDemo){
+    // Mode démo : affiche tout depuis DEMO
+    const d = DEMO[30];
+    showLive('kv-subs',d.subs); showLive('kv-views',d.views); showLive('kv-rev',d.rev);
+    showLive('kv-eng',d.eng); showLive('kv-posts',d.posts);
+    showLive('kb-subs',d.kbSubs); showLive('kb-views',d.kbViews); showLive('kb-rev',d.kbRev);
+    showLive('kb-eng',d.kbEng); showLive('kb-posts',d.kbPosts);
+    showLive('rev-big',d.revBig); showLive('rev-sub',d.revSub); showLive('donut-total',d.donutTotal);
+    buildPerfDemo(30);
+    buildRevDemo(30);
+  } else {
+    // Mode réel : reset tous les KPIs à "—" en attendant les vraies données
+    ['kv-subs','kv-views','kv-rev','kv-eng','kv-posts'].forEach(id=>showLive(id,'—'));
+    ['kb-subs','kb-views','kb-rev','kb-eng','kb-posts'].forEach(id=>showLive(id,''));
+    showLive('rev-big','—'); showLive('rev-sub','Chargement...');
+    buildPerfEmpty(); // graphique vide, zéro données fictives
+    buildRevEmpty();
+
+    // Charge les vraies données
+    await loadStripe();
+    await loadYouTube();
+
+    // Lance le refresh automatique toutes les 90 secondes
+    refreshTimer = setInterval(refreshAll, 90000);
+  }
+
+  setTimeout(()=>{
+    document.getElementById('loading').classList.add('hide');
+    document.getElementById('app').style.opacity='1';
+  }, 1500);
+});
+</script>
+</body>
+</html>
