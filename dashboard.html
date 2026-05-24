@@ -1004,7 +1004,6 @@ async function loadYouTube(){
 
     // Stats chaîne
     const ytHeaders = useOAuth ? { 'Authorization': 'Bearer ' + oauthToken } : {};
-    const ytHeaders = useOAuth ? { 'Authorization': 'Bearer ' + oauthToken } : {};
     const resChannel = await fetch(
       useOAuth 
         ? `https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet&mine=true` 
@@ -1347,7 +1346,8 @@ async function refreshAll(){
 window.addEventListener('DOMContentLoaded', async ()=>{
   const name  = localStorage.getItem('mao_name');
   const demo  = localStorage.getItem('mao_demo');
-  if(!name && !demo){ window.location.href='index.html'; return; }
+  const gtoken = localStorage.getItem('mao_google_token');
+  if(!name && !demo && !gtoken){ window.location.href='index.html'; return; }
 
   REAL.isDemo = !!demo;
   loadTheme();
