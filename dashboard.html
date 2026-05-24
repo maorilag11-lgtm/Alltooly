@@ -1247,9 +1247,8 @@ function setPeriod(p, el){
     if(REAL.youtube) updateYouTubeUI();
     if(REAL.youtube && REAL.youtube.perfLabels) buildPerfReal();
     else buildPerfEmpty();
-    if(REAL.stripe) buildRevReal();
+    if(REAL.stripe) buildRevReal(); else buildRevEmpty();
     fetchGoogleCalendar();
-    else buildRevEmpty();
   }
 }
 
