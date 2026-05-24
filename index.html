@@ -294,7 +294,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 // ─── SCOPES Google demandés en une seule connexion ───────────────────────────
 const GOOGLE_SCOPES = [
   'https://www.googleapis.com/auth/youtube.readonly',
-  'https://www.googleapis.com/auth/calendar.readonly',
+  'https://www.googleapis.com/auth/calendar',
   'https://www.googleapis.com/auth/drive.readonly',
   'profile',
   'email'
@@ -344,8 +344,8 @@ function step1Next(){
 
 // ─── OAUTH GOOGLE ─────────────────────────────────────────────────────────────
 function startGoogleOAuth(){
-  // Remplace 25389059200-fub3hhqnuegjbej2075qlsep50ntha1g.apps.googleusercontent.com par ton vrai Client ID Google une seule fois
-  const clientId = '25389059200-fub3hhqnuegjbej2075qlsep50ntha1g.apps.googleusercontent.com';
+  // Remplace TON_CLIENT_ID_ICI par ton vrai Client ID Google une seule fois
+  const clientId = 'TON_CLIENT_ID_ICI';
   sessionStorage.setItem('google_client_id', clientId);
   const redirectUri = location.origin + location.pathname;
   const params = new URLSearchParams({
