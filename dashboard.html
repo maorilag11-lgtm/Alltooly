@@ -1429,10 +1429,9 @@ const DAYS_FR  = ['LUN.','MAR.','MER.','JEU.','VEN.','SAM.','DIM.'];
 const MONTHS_FR= ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 
 function calInit(){
-  if(calInited) { renderCal(); return; }
-  calInited = true;
-  fetchGoogleCalendar();
   renderCal();
+  // Re-fetch les vrais events Google à chaque fois qu'on ouvre la page
+  fetchGoogleCalendar();
 }
 
 // ─── SYNC GOOGLE CALENDAR RÉEL ───────────────────────────────────
@@ -1803,18 +1802,55 @@ function editEvent(id, e){
   setModalColor(ev.color||'#7c3aed');
   document.getElementById('event-modal').style.display = 'flex';
 }
-function saveEvent(){
+async function saveEvent(){
   const title = document.getElementById('ev-title').value.trim();
   if(!title) { document.getElementById('ev-title').style.borderColor='var(--red)'; return; }
   document.getElementById('ev-title').style.borderColor='';
+
+  const dateVal = document.getElementById('ev-date').value;
+  const timeVal = document.getElementById('ev-time').value || '00:00';
+  const dur     = parseInt(document.getElementById('ev-dur').value) || 60;
+
   const ev = {
     id      : editingId || Date.now().toString(36)+Math.random().toString(36).slice(2),
-    title,
-    date    : document.getElementById('ev-date').value,
-    time    : document.getElementById('ev-time').value,
-    duration: parseInt(document.getElementById('ev-dur').value),
-    color   : modalColor
+    title, date: dateVal, time: timeVal, duration: dur, color: modalColor
   };
+
+  // ── Sync Google Calendar ──────────────────────────────────────────
+  const token = localStorage.getItem('mao_google_token');
+  if(token){
+    try {
+      const startDT = new Date(`${dateVal}T${timeVal}:00`);
+      const endDT   = new Date(startDT.getTime() + dur * 60000);
+
+      const body = {
+        summary: title,
+        start: { dateTime: startDT.toISOString(), timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone },
+        end:   { dateTime: endDT.toISOString(),   timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone },
+        colorId: '3'
+      };
+
+      if(editingId && ev.gcal_id){
+        // Modifier un event existant sur Google
+        await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${ev.gcal_id}`, {
+          method: 'PUT',
+          headers: { 'Authorization': 'Bearer '+token, 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+      } else {
+        // Créer un nouvel event sur Google
+        const res = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer '+token, 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if(data.id) ev.gcal_id = data.id; // sauvegarder l'ID Google
+      }
+    } catch(e){ console.warn('Google Calendar sync error:', e); }
+  }
+
+  // ── Sauvegarder localement ────────────────────────────────────────
   if(editingId){
     const idx = calEvents.findIndex(x=>x.id===editingId);
     if(idx>-1) calEvents[idx]=ev;
@@ -1825,8 +1861,22 @@ function saveEvent(){
   closeEventModal();
   renderCal();
 }
-function deleteEvent(){
+
+async function deleteEvent(){
   if(!editingId) return;
+
+  // ── Supprimer sur Google Calendar ────────────────────────────────
+  const token = localStorage.getItem('mao_google_token');
+  const ev = calEvents.find(e=>e.id===editingId);
+  if(token && ev && ev.gcal_id){
+    try {
+      await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${ev.gcal_id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer '+token }
+      });
+    } catch(e){ console.warn('Google Calendar delete error:', e); }
+  }
+
   calEvents = calEvents.filter(e=>e.id!==editingId);
   saveCalEvents();
   closeEventModal();
