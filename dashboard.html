@@ -1462,6 +1462,7 @@ async function fetchGoogleCalendar(){
       const d = new Date(start);
       return {
         id: 'gcal_' + ev.id,
+        gcal_id: ev.id, // ID réel Google Calendar pour modifier/supprimer
         title: ev.summary || '(Sans titre)',
         date: dateKey(d),
         time: d.toTimeString ? d.toTimeString().substring(0,5) : '00:00',
